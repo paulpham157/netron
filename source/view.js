@@ -2048,8 +2048,9 @@ view.Node = class extends grapher.Node {
             throw error;
         }
         let content = options.names && (node.name || node.identifier) ? (node.name || node.identifier) : node.type.name.split('.').pop();
-        const tooltip = options.names && (node.name || node.identifier) ? node.type.name : (node.name || node.identifier);
+        let tooltip = options.names && (node.name || node.identifier) ? `[${node.type.name}]` : (node.name || node.identifier);
         if (content.length > 21) {
+            tooltip = options.names ? `${content}` : `[${content}]`;
             const begin = content.substring(0, 10);
             const end = content.substring(content.length - 10, content.length);
             content = `${begin}\u2026${end}`;
@@ -5820,7 +5821,7 @@ view.ModelFactoryService = class {
         this.register('./darknet', ['.cfg', '.model', '.txt', '.weights']);
         this.register('./mediapipe', ['.pbtxt']);
         this.register('./executorch', ['.pte'], [], [/^....ET12/]);
-        this.register('./rknn', ['.rknn', '.nb', '.onnx', '.json', '.bin', /^model$/]);
+        this.register('./rknn', ['.rknn', '.nb', '.onnx', '.json', '.bin', /^model$/], [], [/^RKNN/, /^VPMN/], /^....RKNN/);
         this.register('./dlc', ['.dlc', /^model$/, '.params']);
         this.register('./armnn', ['.armnn', '.json']);
         this.register('./mnn', ['.mnn']);
@@ -5856,7 +5857,7 @@ view.ModelFactoryService = class {
         this.register('./catboost', ['.cbm']);
         this.register('./weka', ['.model']);
         this.register('./qnn', ['.json', '.bin', '.serialized']);
-        this.register('./kann', ['.kann', '.bin', '.kgraph']);
+        this.register('./kann', ['.kann', '.bin', '.kgraph'], [], [/^....KaNN/]);
         this.register('', ['.cambricon', '.vnnmodel', '.nnc']);
         /* eslint-enable no-control-regex */
     }

@@ -4915,6 +4915,13 @@
   },
   {
     "type":     "openvino",
+    "target":   "dynamic.xml",
+    "source":   "https://github.com/user-attachments/files/19129764/dynamic.xml.zip[dynamic.xml]",
+    "format":   "OpenVINO IR",
+    "link":     "https://github.com/lutzroeder/netron/issues/191"
+  },
+  {
+    "type":     "openvino",
     "target":   "face-detection-retail-0005.bin,face-detection-retail-0005.xml",
     "source":   "https://github.com/lutzroeder/netron/files/12750770/face-detection-retail-0005.zip[face-detection-retail-0005.bin,face-detection-retail-0005.xml]",
     "format":   "OpenVINO IR",
@@ -4954,6 +4961,13 @@
     "type":     "openvino",
     "target":   "ti_with_large_body.xml",
     "source":   "https://github.com/lutzroeder/netron/files/2871678/ti_with_large_body.xml.zip[ti_with_large_body.xml]",
+    "format":   "OpenVINO IR",
+    "link":     "https://github.com/lutzroeder/netron/issues/191"
+  },
+  {
+    "type":     "openvino",
+    "target":   "unspecified.xml",
+    "source":   "https://github.com/user-attachments/files/19129763/unspecified.xml.zip[unspecified.xml]",
     "format":   "OpenVINO IR",
     "link":     "https://github.com/lutzroeder/netron/issues/191"
   },
@@ -5159,13 +5173,6 @@
   },
   {
     "type":     "pickle",
-    "target":   "bytearray.pkl",
-    "source":   "https://github.com/user-attachments/files/15448319/bytearray.pkl.zip[bytearray.pkl]",
-    "format":   "Pickle",
-    "link":     "https://github.com/lutzroeder/netron/issues/901"
-  },
-  {
-    "type":     "pickle",
     "target":   "bloom_dataset.pkl",
     "source":   "https://github.com/lutzroeder/netron/files/15046492/bloom_dataset.pkl.zip[bloom_dataset.pkl]",
     "format":   "Pickle",
@@ -5174,9 +5181,24 @@
   },
   {
     "type":     "pickle",
+    "target":   "bytearray.pkl",
+    "source":   "https://github.com/user-attachments/files/15448319/bytearray.pkl.zip[bytearray.pkl]",
+    "format":   "Pickle",
+    "link":     "https://github.com/lutzroeder/netron/issues/901"
+  },
+  {
+    "type":     "pickle",
     "target":   "chlorophyta_module_names_062224.pkl",
     "source":   "https://github.com/user-attachments/files/16482612/chlorophyta_module_names_062224.pkl.zip[chlorophyta_module_names_062224.pkl]",
     "format":   "Pickle",
+    "link":     "https://github.com/lutzroeder/netron/issues/901"
+  },
+  {
+    "type":     "pickle",
+    "target":   "courses_with_embeddings.pkl",
+    "source":   "https://github.com/user-attachments/files/19092794/courses_with_embeddings.pkl.zip[courses_with_embeddings.pkl]",
+    "format":   "Pickle",
+    "error":    "Unsupported Pickle type 'pandas.core.frame.DataFrame'.",
     "link":     "https://github.com/lutzroeder/netron/issues/901"
   },
   {
