@@ -5475,8 +5475,6 @@ view.Context = class {
                                     for (const name of types) {
                                         this.error(new view.Error(`Unknown type name '${name}'.`));
                                     }
-                                } else {
-                                    this._content.set(type, new view.Error("PyTorch standalone 'data.pkl' format not supported."));
                                 }
                             }
                             break;
@@ -6105,7 +6103,8 @@ view.ModelFactoryService = class {
                     identifier = reader.identifier;
                 } else {
                     const data = stream.peek(8);
-                    if ((data[0] === 0x08 || data[0] === 0x18 || data[0] === 0x1C || data[0] === 0x20 || data[0] === 0x28) && data[1] === 0x00 && data[2] === 0x00 && data[2] === 0x00) {
+                    if (data[0] >= 8 && data[0] <= 0x28 && (data[0] & 3) === 0 &&
+                        data[1] === 0x00 && data[2] === 0x00 && data[2] === 0x00) {
                         identifier = String.fromCharCode.apply(null, data.slice(4, 8));
                     }
                 }
@@ -6366,17 +6365,14 @@ view.ModelFactoryService = class {
                 { name: 'Git LFS header', value: /^version https:\/\/git-lfs.github.com/ },
                 { name: 'Git LFS header', value: /^\s*oid sha256:/ },
                 { name: 'GGML data', value: /^lmgg|fmgg|tjgg|algg|fugg/ },
-                { name: 'HTML markup', value: /^\s*<html(\s+[^>]+)?>/ },
-                { name: 'HTML markup', value: /^\s*<!doctype\s*html>/ },
-                { name: 'HTML markup', value: /^\s*<!DOCTYPE\s*html>/ },
-                { name: 'HTML markup', value: /^\s*<!DOCTYPE\s*HTML>/ },
+                { name: 'HTML markup', value: /^\s*<(html|HTML)(\s+[^>]+)?>/ },
+                { name: 'HTML markup', value: /^\s*<!(doctype|DOCTYPE)\s*(html|HTML)>/ },
                 { name: 'HTML markup', value: /^\s*<!DOCTYPE\s*HTML\s+(PUBLIC|SYSTEM)?/ },
                 { name: 'Unity metadata', value: /^fileFormatVersion:/ },
                 { name: 'Python source code', value: /^((#.*(\n|\r\n))|('''.*'''(\n|\r\n))|("""[\s\S]*""")|(\n|\r\n))*(import[ ]+[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*([ ]+as[ ]+[a-zA-Z]\w*)?[ ]*(,|;|\n|\r\n))/ },
                 { name: 'Python source code', value: /^((#.*(\n|\r\n))|('''.*'''(\n|\r\n))|("""[\s\S]*""")|(\n|\r\n))*(from[ ]+([a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*)[ ]+import[ ]+[a-zA-Z]\w*)/ },
                 { name: 'Python virtual environment configuration', value: /^home[ ]*=[ ]*/, identifier: /^pyvenv\.cfg/ },
-                { name: 'Bash script', value: /^#!\/usr\/bin\/env\s/ },
-                { name: 'Bash script', value: /^#!\/bin\/bash\s/ },
+                { name: 'Bash script', value: /^(#!\/usr\/bin\/env|#!\/bin\/bash)\s/ },
                 { name: 'TSD header', value: /^%TSD-Header-###%/ },
                 { name: 'AppleDouble data', value: /^\x00\x05\x16\x07/ },
                 { name: 'TensorFlow Hub module', value: /^\x08\x03$/, identifier: /^tfhub_module\.pb/ },
@@ -6396,12 +6392,12 @@ view.ModelFactoryService = class {
                 { name: 'Cambricon model', value: /^\x7fMEF/ },
                 { name: 'Cambricon model', value: /^cambricon_offline/ },
                 { name: 'VNN model', value: /^\x2F\x4E\x00\x00.\x00\x00\x00/, identifier: /.vnnmodel$/ },
-                { name: 'XGBoost model', value: /^binf/ }, // https://github.com/dmlc/xgboost/blob/master/src/learner.cc
-                { name: 'XGBoost model', value: /^bs64/ }, // https://github.com/dmlc/xgboost/blob/master/src/learner.cc
+                { name: 'XGBoost model', value: /^(binf|bs64)/ }, // https://github.com/dmlc/xgboost/blob/master/src/learner.cc
                 { name: 'SQLite data', value: /^SQLite format/ },
                 { name: 'Optimium model', value: /^EZMODEL/ }, // https://github.com/EZ-Optimium/Optimium,
-                { name: 'undocumented NNC data', value: /^\xC0\x0F\x00\x00ENNC/ },
-                { name: 'undocumented NNC data', value: /^\xBC\x0F\x00\x00ENNC/ }
+                { name: 'undocumented NNC data', value: /^(\xC0|\xBC)\x0F\x00\x00ENNC/ },
+                { name: 'Rich Text Format data', value: /^{\\rtf/ },
+                { name: 'Encrypted File data', value: /^ENCRYPTED_FILE/ },
             ];
             /* eslint-enable no-control-regex */
             const buffer = stream.peek(Math.min(4096, stream.length));

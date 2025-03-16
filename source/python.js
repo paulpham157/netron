@@ -3394,6 +3394,7 @@ python.Execution = class {
         this.registerType('sklearn.ensemble._hist_gradient_boosting.predictor.TreePredictor', class {});
         this.registerType('sklearn.ensemble._iforest.IsolationForest', class {});
         this.registerType('sklearn.ensemble._stacking.StackingClassifier', class {});
+        this.registerType('sklearn.ensemble._stacking.StackingRegressor', class {});
         this.registerType('sklearn.ensemble._voting.VotingClassifier', class {});
         this.registerType('sklearn.ensemble._voting.VotingRegressor', class {});
         this.registerType('sklearn.ensemble._weight_boosting.AdaBoostClassifier', class {});
@@ -7468,6 +7469,7 @@ python.Execution = class {
         this.registerFunction('torch.fx._symbolic_trace.wrap', (fn_or_name) => {
             return fn_or_name;
         });
+        this.registerFunction('torch.fx._symbolic_trace._assert_is_none');
         this.registerFunction('torchvision.datasets.folder.default_loader');
         this.registerType('torchvision.datasets.folder.ImageFolder', class {});
         this.registerType('torchvision.datasets.mnist.FashionMNIST', class {});
@@ -18503,6 +18505,7 @@ python.Execution = class {
         this.registerType('torch._dynamo.eval_frame.OptimizedModule', class extends torch.nn.modules.module.Module {});
         this.registerType('torch._dynamo.eval_frame.OptimizeContext', class extends torch._dynamo.eval_frame._TorchDynamoContext {});
         this.registerType('torch._dynamo.hooks.Hooks', class {});
+        this.registerType('torch._dynamo.output_graph.GraphCompileReason', class {});
         this.registerType('torch._dynamo.repro.after_dynamo.WrapBackendDebug', class {});
         this.registerType('torch._TorchCompileInductorWrapper', class {});
         this.registerFunction('torch._inductor.compile_fx.compile_fx');
