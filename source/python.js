@@ -7142,6 +7142,7 @@ python.Execution = class {
         this.registerType('torch.ao.nn.quantized.reference.modules.linear.Linear', class {});
         this.registerType('torch.ao.nn.qat.modules.conv.Conv2d', class {});
         this.registerType('torch.ao.nn.qat.modules.linear.Linear', class {});
+        this.registerType('torch.ao.nn.intrinsic.quantized.modules.conv_relu.ConvReLU1d', class extends torch.ao.nn.quantized.modules.conv.Conv1d {});
         this.registerType('torch.ao.nn.intrinsic.quantized.modules.conv_relu.ConvReLU2d', class extends torch.ao.nn.quantized.modules.conv.Conv2d {});
         this.registerType('torch.ao.nn.intrinsic.quantized.modules.linear_relu.LinearReLU', class extends torch.ao.nn.quantized.modules.linear.Linear {});
         this.registerType('torch.ao.nn.intrinsic.modules.fused._FusedModule', class extends torch.nn.modules.container.Sequential {});
@@ -19002,8 +19003,13 @@ python.Execution = class {
                 return this.length;
             }
         });
-        this.registerType('torch.Tensor', class {
+        this.registerType('torch._C.TensorMeta', class {
+        });
+        this.registerType('torch._C.TensorBase', class extends torch._C.TensorMeta {
+        });
+        this.registerType('torch.Tensor', class extends torch._C.TensorBase {
             constructor() {
+                super();
                 this._layout = torch.strided;
             }
             get device() {
