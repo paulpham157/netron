@@ -916,10 +916,11 @@ view.View = class {
             canvas.setAttribute('viewBox', `0 0 ${width} ${height}`);
             canvas.setAttribute('width', width);
             canvas.setAttribute('height', height);
-            this._zoom = this._stack && this._stack.length > 0 && this._stack[0].state ? this._stack[0].state.zoom : 1;
+            const state = this._stack && this._stack.length > 0 && this._stack[0] && this._stack[0].state ? this._stack[0].state : null;
+            this._zoom = state ? state.zoom : 1;
             this._updateZoom(this._zoom);
             const container = this._element('graph');
-            const context = this._stack && this._stack.length > 0 && this._stack[0].state ? viewGraph.select([this._stack[0].state.context]) : [];
+            const context = state ? viewGraph.select([state.context]) : [];
             if (context.length > 0) {
                 this.scrollTo(context, 'instant');
             } else if (elements && elements.length > 0) {
@@ -1777,7 +1778,8 @@ view.Worker = class {
             delete this._resolve;
             delete this._reject;
             if (reject && message.type === 'error') {
-                reject(new Error(message.message));
+                const error = new Error(`Worker: ${message.message}`);
+                reject(error);
             } else if (resolve) {
                 resolve(message);
             }
@@ -5714,8 +5716,8 @@ view.Context = class {
                                 const archive = zip.Archive.open(stream, 'zlib');
                                 const data = archive ? archive.entries.get('') : stream;
                                 let condition = false;
-                                if (data.length > 2) {
-                                    const head = data.peek(2);
+                                if (data.length > 4) {
+                                    const head = data.peek(4);
                                     condition = head[0] === 0x80 && head[1] < 7;
                                     if (!condition) {
                                         data.seek(-1);
@@ -5724,9 +5726,14 @@ view.Context = class {
                                         if (tail[0] === 0x2e) {
                                             const size = Math.min(data.length, 256);
                                             const buffer = data.peek(size);
-                                            const content = String.fromCharCode.apply(null, buffer);
-                                            const list = ['ccopy_reg', 'cnumpy.core.multiarray', '(dp0'];
-                                            condition = list.some((value) => content.indexOf(value) !== -1);
+                                            condition =
+                                                (buffer[0] === 0x28 && buffer[1] === 0x64 && buffer[2] === 0x70) ||
+                                                (buffer[0] === 0x28 && buffer[1] === 0x63 && buffer.indexOf(0x0a) !== -1);
+                                            if (!condition) {
+                                                const content = String.fromCharCode.apply(null, buffer);
+                                                const list = ['ccopy_reg', 'cnumpy.core.multiarray', '(dp0'];
+                                                condition = list.some((value) => content.indexOf(value) !== -1);
+                                            }
                                         }
                                     }
                                 }
@@ -6411,8 +6418,7 @@ view.ModelFactoryService = class {
                     identifier = reader.identifier;
                 } else {
                     const data = stream.peek(8);
-                    if (data[0] >= 8 && data[0] <= 0x28 && (data[0] & 3) === 0 &&
-                        data[1] === 0x00 && data[2] === 0x00 && data[2] === 0x00) {
+                    if (data[0] >= 8 && data[0] <= 0x28 && (data[0] & 3) === 0 && data[1] === 0x00 && data[2] === 0x00 && data[3] === 0x00) {
                         identifier = String.fromCharCode.apply(null, data.slice(4, 8));
                     }
                 }
@@ -6430,7 +6436,8 @@ view.ModelFactoryService = class {
                         { name: 'MindSpore Lite model data', identifier: 'MSL3' },
                         { name: 'NVDA model data', identifier: 'NVDA' },
                         { name: 'BSTM model data', identifier: 'BSTM' },
-                        { name: 'onnu model data', identifier: 'onnu' }
+                        { name: 'onnu model data', identifier: 'onnu' },
+                        { name: 'ONNX Runtime On-Device Training Checkpoint', identifier: 'ODTC' }
                     ];
                     for (const format of formats) {
                         if (identifier === format.identifier) {
