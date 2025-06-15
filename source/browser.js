@@ -31,7 +31,7 @@ browser.Host = class {
             repository: this._element('logo-github').getAttribute('href'),
             menu: true
         };
-        if (!/^\d\.\d\.\d$/.test(this.version)) {
+        if (this.version && !/^\d\.\d\.\d$/.test(this.version)) {
             throw new Error('Invalid version.');
         }
     }
@@ -236,10 +236,12 @@ browser.Host = class {
     async export(file, blob) {
         const element = this.document.createElement('a');
         element.download = file;
-        element.href = URL.createObjectURL(blob);
+        const url = URL.createObjectURL(blob);
+        element.href = url;
         this.document.body.appendChild(element);
         element.click();
         this.document.body.removeChild(element);
+        URL.revokeObjectURL(url);
     }
 
     async execute(name /*, value */) {
