@@ -5868,7 +5868,7 @@
   {
     "name": "async.coro.end",
     "summary": "marks the end of the coroutine in the suspend block",
-    "description": "The `async.coro.end` marks the point where a coroutine needs to return\n    control back to the caller if it is not an initial invocation of the\n    coroutine. It the start part of the coroutine is is no-op.",
+    "description": "The `async.coro.end` marks the point where a coroutine needs to return\n    control back to the caller if it is not an initial invocation of the\n    coroutine. In the start part of the coroutine it is no-op.",
     "operands": [
       { "name": "handle", "type": "Async_CoroHandleType" }
     ],
@@ -31704,7 +31704,7 @@
   {
     "name": "nvgpu.mbarrier.test.wait",
     "summary": "Checks if the `nvgpu.mbarrier` has completed its current phase.",
-    "description": "Checks whether the mbarrier object has completed the phase. It is is a \n    non-blocking instruction which tests for the completion of the phase.\n\n    Example:\n    ```mlir\n      %isComplete = nvgpu.mbarrier.test.wait %barrier, %token : !nvgpu.mbarrier.barrier<memorySpace = #gpu.address_space<workgroup>>, !nvgpu.mbarrier.token\n    ```",
+    "description": "Checks whether the mbarrier object has completed the phase. It is a \n    non-blocking instruction which tests for the completion of the phase.\n\n    Example:\n    ```mlir\n      %isComplete = nvgpu.mbarrier.test.wait %barrier, %token : !nvgpu.mbarrier.barrier<memorySpace = #gpu.address_space<workgroup>>, !nvgpu.mbarrier.token\n    ```",
     "operands": [
       { "name": "barriers", "type": "NVGPU_MBarrierGroup" },
       { "name": "token", "type": "NVGPU_MBarrierToken" },
@@ -31718,7 +31718,7 @@
   {
     "name": "nvgpu.mbarrier.try_wait.parity",
     "summary": "Waits for the `nvgpu.mbarrier` to complete its current phase.",
-    "description": "Checks whether the mbarrier object has completed the phase. It is is a \n    potentially blocking instruction which tests for the completion of the \n    phase. Suspended thread resumes execution when the specified phase completes \n    OR before the phase completes following a system-dependent time limit. \n\n    The `$phaseParity` specifies either even phase (0) or odd phase (1) to \n    wait.\n\n    Example:\n    ```mlir\n      nvgpu.mbarrier.try_wait.parity %barrier, %phaseParity, %ticks : !nvgpu.mbarrier.barrier<memorySpace = #gpu.address_space<workgroup>>\n    ```",
+    "description": "Checks whether the mbarrier object has completed the phase. It is a \n    potentially blocking instruction which tests for the completion of the \n    phase. Suspended thread resumes execution when the specified phase completes \n    OR before the phase completes following a system-dependent time limit. \n\n    The `$phaseParity` specifies either even phase (0) or odd phase (1) to \n    wait.\n\n    Example:\n    ```mlir\n      nvgpu.mbarrier.try_wait.parity %barrier, %phaseParity, %ticks : !nvgpu.mbarrier.barrier<memorySpace = #gpu.address_space<workgroup>>\n    ```",
     "operands": [
       { "name": "barriers", "type": "NVGPU_MBarrierGroup" },
       { "name": "phaseParity", "type": "I1" },
@@ -93784,6 +93784,28 @@
     "hasCustomAssemblyFormat": true
   },
   {
+    "name": "torch.aten.absolute",
+    "summary": "Generated op for `aten::absolute : (Tensor) -> (Tensor)`",
+    "operands": [
+      { "name": "self", "type": "AnyTorchTensorType" }
+    ],
+    "results": [
+      { "name": "result", "type": "AnyTorchOptionalTensorType" }
+    ],
+    "hasCustomAssemblyFormat": true
+  },
+  {
+    "name": "torch.aten.absolute_",
+    "summary": "Generated op for `aten::absolute_ : (Tensor) -> (Tensor)`",
+    "operands": [
+      { "name": "self", "type": "Torch_NonValueTensorType" }
+    ],
+    "results": [
+      { "name": "result", "type": "AnyTorchOptionalNonValueTensorType" }
+    ],
+    "hasCustomAssemblyFormat": true
+  },
+  {
     "name": "torch.aten.acos",
     "summary": "Generated op for `aten::acos : (Tensor) -> (Tensor)`",
     "operands": [
@@ -103971,7 +103993,7 @@
   {
     "name": "tosa.cast",
     "summary": "Cast operation.",
-    "description": "Casts a tensor from one data type to another.\n    * This table is showing the supported conversions from the TOSA Specification.\n    * The MLIR dialect here can be used to represent other conversions.\n\n    | Mode                     | Input   | Output  |\n    |--------------------------|---------|---------|\n    | fp16 to fp32             | float16 | float32 |\n    | fp16 to int 16           | float16 | int16   |\n    | fp16 to int 32           | float16 | int32   |\n    | fp16 to int 8            | float16 | int8    |\n    | fp32 to fp16             | float32 | float16 |\n    | fp32 to int 16           | float32 | int16   |\n    | fp32 to int 32           | float32 | int32   |\n    | fp32 to int 8            | float32 | int8    |\n    | int 16 to fp16           | int16   | float16 |\n    | int 16 to fp32           | int16   | float32 |\n    | int 32 to fp16           | int32   | float16 |\n    | int 32 to fp32           | int32   | float32 |\n    | int 8 to fp16            | int8    | float16 |\n    | int 8 to fp32            | int8    | float32 |\n    | bool to int 16           | Boolean | int16   |\n    | bool to int 32           | Boolean | int32   |\n    | bool to int 8            | Boolean | int8    |\n    | int 16 to bool           | int16   | Boolean |\n    | int 16 to int 32         | int16   | int32   |\n    | int 16 to int 8          | int16   | int8    |\n    | int 32 to bool           | int32   | Boolean |\n    | int 32 to int 16         | int32   | int16   |\n    | int 32 to int 8          | int32   | int8    |\n    | int 8 to bool            | int8    | Boolean |\n    | int 8 to int 16          | int8    | int16   |\n    | int 8 to int 32          | int8    | int32   |\n    | bf16 to fp32             | bf16    | float32 |\n    | bf16 to int 16           | bf16    | int16   |\n    | bf16 to int 32           | bf16    | int32   |\n    | bf16 to int 8            | bf16    | int8    |\n    | fp32 to bf16             | float32 | bf16    |\n    | int 16 to bf16           | int16   | bf16    |\n    | int 32 to bf16           | int32   | bf16    |\n    | int 8 to bf16            | int8    | bf16    |\n    | bf16 to fp8e4m3          | bf16    | fp8e4m3 |\n    | fp8e4m3 to bf16          | fp8e4m3 | bf16    |\n    | bf16 to fp8e5m2          | bf16    | fp8e5m2 |\n    | fp8e5m2 to bf16          | fp8e5m2 | bf16    |\n    | fp16 to fp8e4m3          | float16 | fp8e4m3 |\n    | fp32 to fp8e4m3          | float32 | fp8e4m3 |\n    | fp8e4m3 to fp16          | fp8e4m3 | float16 |\n    | fp8e4m3 to fp32          | fp8e4m3 | float32 |\n    | fp16 to fp8e5m2          | float16 | fp8e5m2 |\n    | fp32 to fp8e5m2          | float32 | fp8e5m2 |\n    | fp8e5m2 to fp16          | fp8e5m2 | float16 |\n    | fp8e5m2 to fp32          | fp8e5m2 | float32 |",
+    "description": "Casts a tensor from one data type to another.",
     "operands": [
       { "name": "input", "type": "Tosa_Tensor" }
     ],
@@ -103983,7 +104005,7 @@
   {
     "name": "tosa.cast_from_block_scaled",
     "summary": "Apply scales from a scale tensor to the values in a value tensor",
-    "description": "Apply the scales from a scale tensor to the values in a value tensor, casting\n    the result to the output type. The block dimension must be the last dimension\n    of the tensor.",
+    "description": "Apply the scales from a scale tensor to the values in a value tensor, casting\n    the result to the output type. The block dimension must be the last dimension\n    of the tensor.\n\n    Note: This operation is deprecated. It will be removed in the future.",
     "operands": [
       { "name": "input_data", "type": "Tosa_MXFPDataTensorAtLeast1D" },
       { "name": "input_scale", "type": "Tosa_MXFPScaleTensorAtLeast1D" }
@@ -103999,7 +104021,7 @@
   {
     "name": "tosa.cast_to_block_scaled",
     "summary": "Calculate scale tensor values per block, output to separate scale and data tensors.",
-    "description": "Calculate a scale value per block of input values and use that to calculate\n    scaled data values from an input tensor. The output tensors are cast to the\n    specified scale and value types. The block dimension will be the last dimension\n    of the tensor.",
+    "description": "Calculate a scale value per block of input values and use that to calculate\n    scaled data values from an input tensor. The output tensors are cast to the\n    specified scale and value types. The block dimension will be the last dimension\n    of the tensor.\n\n    Note: This operation is deprecated. It will be removed in the future.",
     "operands": [
       { "name": "input_data", "type": "Tosa_TensorAtLeast1D" }
     ],
@@ -114926,7 +114948,7 @@
   {
     "name": "ttg.async_wait",
     "summary": "Ensure all specified async_copy_* operations are complete.",
-    "description": "The `async_wait` op waits until at most \"num\" async copy groups are outstanding without synchronising CTA execution.\n    It takes zero or more `asyncToken` plus an integer `num` that specifies how many async copy groups can remain\n    outstanding after the `async_wait` op is completed. `num = 0` waits until all groups of async copies are complete.\n\n    This operation does not provide any syncronisation in the CTA, if syncronisation is needed use `ttg.local_barrier`\n    in addition to this operation.",
+    "description": "The `async_wait` op waits until at most \"num\" async copy groups are outstanding without synchronising CTA execution.\n    It takes zero or more `asyncToken` plus an integer `num` that specifies how many async copy groups can remain\n    outstanding after the `async_wait` op is completed. `num = 0` waits until all groups of async copies are complete.\n\n    This operation does not provide any synchronization in the CTA, if synchronization is needed use `ttg.local_barrier`\n    in addition to this operation.",
     "operands": [
       { "name": "asyncToken", "type": "Variadic<TTG_AsyncToken>" }
     ],
@@ -114941,7 +114963,7 @@
   {
     "name": "ttg.barrier",
     "summary": "Synchronizes execution and reads/writes to the selected address spaces for all threads in the CTA.",
-    "description": "The `barrier` op synchronises the execution and all operations between the selected address spaces for all\n    threads in the CTA. It is used to coordinate communication between threads in the CTA.\n\n    This operation waits until all threads in the CTA have reached a `barrier` (for syncronisation) and operations\n    between the selected address spaces made by these threads prior to the op are visible to all threads in the CTA.\n\n    Data hazards between threads accessing the same memory can be avoided by synchronising the\n    specified scope in-between these accesses with a `barrier`.\n\n    A `barrier` operation only provides syncronisation and memory guarantees on the selected address spaces in the CTA.\n\n    The mandatory `addrspace` attribute is a bitmask describing which address spaces will be visible when the `barrier` completes:\n\n    * `none`         control-only syncronisation (no memory ordering).\n    * `local`        shared-memory operations are complete and visible CTA-wide.\n    * `global_read`  global memory reads are complete and visible CTA-wide.\n    * `global_write` global memory writes are complete and visible CTA-wide.\n    * `tensor_read`  tensor memory read operations are complete and visible CTA-wide.\n    * `tensor_write` tensor memory write operations are complete and visible CTA-wide.\n    * `all`          convenience alias for `[\"local\", \"global_read\", \"global_write\", \"tensor_read\", \"tensor_write\"]`.\n\n    Multiple address spaces can be combined (e.g. `local|tensor_write`). `none` cannot be combined with other address spaces.\n\n    Example:\n\n    ```mlir\n    ttg.barrier local\n    ttg.barrier local|global_read|global_write\n    ```",
+    "description": "The `barrier` op synchronises the execution and all operations between the selected address spaces for all\n    threads in the CTA. It is used to coordinate communication between threads in the CTA.\n\n    This operation waits until all threads in the CTA have reached a `barrier` (for synchronization) and operations\n    between the selected address spaces made by these threads prior to the op are visible to all threads in the CTA.\n\n    Data hazards between threads accessing the same memory can be avoided by synchronising the\n    specified scope in-between these accesses with a `barrier`.\n\n    A `barrier` operation only provides synchronization and memory guarantees on the selected address spaces in the CTA.\n\n    The mandatory `addrspace` attribute is a bitmask describing which address spaces will be visible when the `barrier` completes:\n\n    * `none`         control-only synchronization (no memory ordering).\n    * `local`        shared-memory operations are complete and visible CTA-wide.\n    * `global_read`  global memory reads are complete and visible CTA-wide.\n    * `global_write` global memory writes are complete and visible CTA-wide.\n    * `tensor_read`  tensor memory read operations are complete and visible CTA-wide.\n    * `tensor_write` tensor memory write operations are complete and visible CTA-wide.\n    * `all`          convenience alias for `[\"local\", \"global_read\", \"global_write\", \"tensor_read\", \"tensor_write\"]`.\n\n    Multiple address spaces can be combined (e.g. `local|tensor_write`). `none` cannot be combined with other address spaces.\n\n    Example:\n\n    ```mlir\n    ttg.barrier local\n    ttg.barrier local|global_read|global_write\n    ```",
     "attributes": [
       { "name": "addrSpace", "type": "TTG_AddrSpace{none|local|global_read|global_write|tensor_read|tensor_write|all}" }
     ],
